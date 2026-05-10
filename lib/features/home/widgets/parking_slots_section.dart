@@ -8,8 +8,7 @@ class FloorGridSection extends StatelessWidget {
   const FloorGridSection({super.key, required this.slots});
 
   bool _isAvailable(ParkingSlot slot) =>
-      slot.state.toLowerCase() == 'disponible' ||
-          slot.state.toLowerCase() == 'available';
+      slot.state.toLowerCase() == 'disponible';
 
   @override
   Widget build(BuildContext context) {

@@ -19,7 +19,7 @@ DashboardRepository dashboardRepository(DashboardRepositoryRef ref) {
 
 @riverpod
 SseClientService sseClientService(SseClientServiceRef ref) {
-  return SseClientService(baseUrl: 'http://192.168.1.14:3100');
+  return SseClientService();
 }
 
 @riverpod
@@ -34,7 +34,7 @@ class DashboardController extends _$DashboardController {
   Future<DashboardModel> build() async {
     final session = await ref.watch(sessionControllerProvider.future);
 
-    if (session == null || session.token.isEmpty) {
+    if (session == null || session.accessToken.isEmpty) {
       throw Exception('Sesión no disponible');
     }
 
@@ -46,7 +46,7 @@ class DashboardController extends _$DashboardController {
     state = await AsyncValue.guard(() async {
       final session = await ref.read(sessionControllerProvider.future);
 
-      if (session == null || session.token.isEmpty) {
+      if (session == null || session.accessToken.isEmpty) {
         throw Exception('Sesión no disponible');
       }
 
@@ -64,7 +64,7 @@ class DashboardController extends _$DashboardController {
 Stream<DashboardModel> dashboardUpdates(DashboardUpdatesRef ref) async* {
   final session = await ref.watch(sessionControllerProvider.future);
 
-  if (session == null || session.token.isEmpty) {
+  if (session == null || session.accessToken.isEmpty) {
     return;
   }
 

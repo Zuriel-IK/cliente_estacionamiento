@@ -23,7 +23,7 @@ final dashboardRepositoryProvider =
 );
 
 typedef DashboardRepositoryRef = AutoDisposeProviderRef<DashboardRepository>;
-String _$sseClientServiceHash() => r'8621ab707708adfde0aafaacfd6ba92613aa7c95';
+String _$sseClientServiceHash() => r'4bab1d46661fe5acf9103bb5d0cdfd4c57c02b64';
 
 /// See also [sseClientService].
 @ProviderFor(sseClientService)
@@ -55,7 +55,7 @@ final dashboardSseServiceProvider =
 );
 
 typedef DashboardSseServiceRef = AutoDisposeProviderRef<DashboardSseService>;
-String _$dashboardUpdatesHash() => r'b317a3e23f772951143bce98d9797a3411d2a8ec';
+String _$dashboardUpdatesHash() => r'4908f26b53dda98579474c5a8b8f8c8a96044537';
 
 /// See also [dashboardUpdates].
 @ProviderFor(dashboardUpdates)
@@ -72,7 +72,7 @@ final dashboardUpdatesProvider =
 
 typedef DashboardUpdatesRef = AutoDisposeStreamProviderRef<DashboardModel>;
 String _$dashboardControllerHash() =>
-    r'67a3032366805c3e9f1c5778b7b3d0f5bfc4c986';
+    r'902bc2084c37f54b87893fe9f67758557e752e79';
 
 /// See also [DashboardController].
 @ProviderFor(DashboardController)

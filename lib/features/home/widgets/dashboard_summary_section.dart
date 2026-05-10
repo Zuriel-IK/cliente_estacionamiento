@@ -179,7 +179,7 @@ class _CircularPercent extends StatelessWidget {
 
   static String _statusLabel(int percentage) {
     if (percentage >= 85) return 'HIGH';
-    if (percentage >= 60) return 'MEDIUM';
+    if (percentage >= 40) return 'MEDIUM';
     return 'LOW';
   }
 

@@ -13,35 +13,28 @@ class SessionController extends _$SessionController {
 
   @override
   FutureOr<AuthResponse?> build() async {
-    final token = await _tokenStorage.getAccessToken();
+    final accessToken = await _tokenStorage.getAccessToken();
     final refreshToken = await _tokenStorage.getRefreshToken();
 
-    if (token == null || refreshToken == null) {
+    if (accessToken == null || refreshToken == null) {
       return null;
     }
 
     try {
       final user = await ref.read(authRepositoryProvider).getUserProfile();
+
       return AuthResponse(
-        token: token,
+        accessToken: accessToken,
         refreshToken: refreshToken,
         user: user,
       );
     } catch (e) {
-      return AuthResponse(
-        token: token,
-        refreshToken: refreshToken,
-        user: User(
-          id: '',
-          firstName: '',
-          lastName: '',
-        ),
-      );
+      return null;
     }
   }
 
   Future<void> setSession(AuthResponse authData) async {
-    await _tokenStorage.saveTokens(authData.token, authData.refreshToken);
+    await _tokenStorage.saveTokens(authData.accessToken, authData.refreshToken);
     state = AsyncValue.data(authData);
   }
 
@@ -51,15 +44,16 @@ class SessionController extends _$SessionController {
 
     try {
       final user = await ref.read(authRepositoryProvider).getUserProfile();
-
       state = AsyncValue.data(
         AuthResponse(
-          token: current.token,
+          accessToken: current.accessToken,
           refreshToken: current.refreshToken,
           user: user,
         ),
       );
-    } catch (_) {}
+    } catch (_) {
+
+    }
   }
 
   Future<void> logout() async {

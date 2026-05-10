@@ -76,7 +76,7 @@ class AuthRepository {
 
   Future<User> getUserProfile() async {
     try {
-      final response = await _dio.get('/api/auth/profile');
+      final response = await _dio.get('/api/auth/me');
 
 
       if (response.data == null) {

@@ -2,17 +2,17 @@ import 'dart:convert';
 
 import '../../../core/network/token_storage.dart';
 import '../../../core/sse/sse_client_service.dart';
-import '../../models/dashboard_model.dart';
+import '../../models/reservation_model.dart';
 
-class DashboardSseService {
+class ReservationSseService {
   final SseClientService _sseClient;
   final TokenStorage _storage = TokenStorage();
 
-  DashboardSseService({
+  ReservationSseService({
     required SseClientService sseClient,
   }) : _sseClient = sseClient;
 
-  Stream<DashboardModel> connect() async* {
+  Stream<List<ReservationModel>> connect(String userId) async* {
     try {
       final token = await _storage.getAccessToken();
 
@@ -23,20 +23,35 @@ class DashboardSseService {
       };
 
       final rawStream = _sseClient.connect(
-        path: '/api/sse/dashboard',
+        path: '/api/sse/reservation/$userId',
         headers: headers,
       );
 
       await for (final message in rawStream) {
-        if (message.event != 'dashboard.updated') continue;
-
+        if (message.event != 'reservation.updated') continue;
         final decoded = jsonDecode(message.data);
         final payload = Map<String, dynamic>.from(decoded);
         final data = payload['data'];
+        if (data is List) {
+          yield data
+              .map((e) => ReservationModel.fromJson(
+            Map<String, dynamic>.from(e),
+          ))
+              .toList();
+          continue;
+        }
 
-        if (data is! Map<String, dynamic>) continue;
+        if (data is Map<String, dynamic>) {
+          final reservations = data['reservations'];
 
-        yield DashboardModel.fromJson(data);
+          if (reservations is List) {
+            yield reservations
+                .map((e) => ReservationModel.fromJson(
+              Map<String, dynamic>.from(e),
+            ))
+                .toList();
+          }
+        }
       }
     } catch (_) {
       return;

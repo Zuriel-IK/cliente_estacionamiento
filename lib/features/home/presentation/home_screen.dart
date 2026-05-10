@@ -10,7 +10,11 @@ import '../widgets/dashboard_summary_section.dart';
 import '../widgets/parking_slots_section.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({super.key});
+  final bool isActive;
+  const HomeScreen({
+    super.key,
+    required this.isActive,
+  });
 
   @override
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
@@ -24,19 +28,35 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+
+    if (widget.isActive) {
+      _startSseListener();
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant HomeScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.isActive && !oldWidget.isActive) {
+      _startSseListener();
+      ref.read(dashboardControllerProvider.notifier).refreshDashboard();
+    }
+
+    if (!widget.isActive && oldWidget.isActive) {
+      _stopSseListener();
+    }
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _sseSub?.close();
-    _sseSub = null;
+    _stopSseListener();
     super.dispose();
   }
 
   void _startSseListener() {
     if (_sseSub != null) return;
-
 
     _sseSub = ref.listenManual<AsyncValue<DashboardModel>>(
       dashboardUpdatesProvider,
@@ -46,6 +66,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         });
       },
     );
+  }
+
+  void _stopSseListener() {
+    _sseSub?.close();
+    _sseSub = null;
   }
 
   @override

@@ -1,3 +1,4 @@
+import 'package:cliente_estacionamiento/core/constants/constants.dart';
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'token_storage.dart';
@@ -7,7 +8,7 @@ part 'dio_client.g.dart';
 @riverpod
 Dio dio(DioRef ref) {
   final dio = Dio(BaseOptions(
-    baseUrl: 'http://192.168.1.14:3100',
+    baseUrl: NetworkApp.ip_server,
     connectTimeout: const Duration(seconds: 5),
     receiveTimeout: const Duration(seconds: 3),
   ));
@@ -25,7 +26,6 @@ Dio dio(DioRef ref) {
     },
     onError: (e, handler) {
       if (e.response?.statusCode == 401) {
-        // Opcional: Aquí podrías disparar un evento de logout global
       }
       return handler.next(e);
     },
